@@ -8,7 +8,10 @@ WORKDIR /app
 COPY requirements.txt .
 
 # instalar dependencias
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt-get update && apt-get install -y build-essential libjpeg-dev zlib1g-dev \
+    && pip install --no-cache-dir -r requirements.txt \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # copiar código
 COPY . .
