@@ -1,61 +1,91 @@
-import { useState} from "react";           //useState lo usaremos para guardar la imagen del usuario
-import { Upload, Leaf, AlertCircle, Activity} from "lucide-react";     //Es para el icono
+import { useState, useRef } from "react"; //useRef para resetear input
+import { Upload, Leaf, Activity } from "lucide-react"; //Iconos
 
-function App() {
-    
-    //Estados del componente
-    
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [isDragging, setIsDragging] = useState(false);
-    const [showResults, setShowResults] = useState(false);
+function ImageUpload() {
+  // Estados del componente
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [prediction, setPrediction] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-    /**
-     * Cuando se sube una imagen, se convierte en texto, se guarda en el estado 
-     * y luego se muestran los resultados 
-     */
-    const handleImageUpload = (file) => {
-        const reader = new FileReader();
+  // Ref para resetear el input file
+  const fileInputRef = useRef(null);
 
-        reader.onloadend = () => {
-            setSelectedImage(reader.result);
-            setTimeout(() => setShowResults(true), 1000);
-        };
+  /**
+   * Cuando se sube una imagen, se convierte en texto, se guarda en el estado
+   * y luego se muestran los resultados
+   */
+  const handleImageUpload = (file) => {
+    const reader = new FileReader();
 
-        reader.readAsDataURL(file);
+    reader.onloadend = async () => {
+      const base64Image = reader.result;
+      setSelectedImage(base64Image);
+      setLoading(true);
+      try {
+        const response = await fetch("http://localhost:5000/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ image: base64Image }),
+        });
+
+        const data = await response.json();
+        setPrediction(data.result || data.error);
+      } catch (error) {
+        console.error("Error enviando la imagen:", error);
+        setPrediction("Error de conexión con el servidor.");
+      } finally {
+        setLoading(false);
+        setShowResults(true);
+      }
     };
 
-    /**
-     * Cuando arrastres y lo sueltes, si es una imagen se analiza
-     * el parametro e es un Evento
-     */
-    const handleDrop = (e) => {
-        e.preventDefault();         //Evita que el browser lo abra
-        setIsDragging(false);       
-        const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith('image/')) {
-            handleImageUpload(file);
-        }   
-    };
+    reader.readAsDataURL(file);
+  };
 
-    /**
-     * Cuando seleccionas un archivo con el input, lo mando a analizar
-     * igual que si lo arrastraras
-     */
-    const handleFileInput = (e) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            handleImageUpload(file);
-        }
-    };
+  /**
+   * Maneja el arrastre de archivo
+   */
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith("image/")) {
+      handleImageUpload(file);
+    }
+  };
 
- return (
+  /**
+   * Maneja la selección desde input
+   */
+  const handleFileInput = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleImageUpload(file);
+    }
+  };
+
+  /**
+   * Reset del formulario e input
+   */
+  const handleReset = () => {
+    setSelectedImage(null);
+    setShowResults(false);
+    setPrediction(null);
+    if (fileInputRef.current) fileInputRef.current.value = null;
+  };
+
+  return (
     <div className="min-h-screen bg-gradient-to-br from-green-0 via-emerald-0 to-teal-0 relative overflow-hidden">
       {/* Fondo animado */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-10 left-10 text-green-200 opacity-50 animate-float">
           <Leaf size={80} />
         </div>
-        <div className="absolute top-40 right-20 text-green-300 opacity-50  animate-float-delayed">
+        <div className="absolute top-40 right-20 text-green-300 opacity-50 animate-float-delayed">
           <Leaf size={60} />
         </div>
         <div className="absolute bottom-20 left-1/4 text-emerald-200 opacity-50 animate-float">
@@ -106,6 +136,7 @@ function App() {
               </p>
               <label className="inline-block">
                 <input
+                  ref={fileInputRef}
                   type="file"
                   accept="image/*"
                   onChange={handleFileInput}
@@ -135,19 +166,32 @@ function App() {
             </div>
           </div>
         )}
-        {/* Resultados - placeholder vacío */}
+
+        {/* Resultados */}
         {showResults && selectedImage && (
           <div className="animate-fade-in">
             <div className="bg-white rounded-3xl shadow-xl p-8 border-4 border-green-300 text-center">
-              <Activity className="text-green-600 mx-auto mb-4" size={40} />
-              <p className="text-green-800 font-medium">
-                Aquí aparecerán los resultados generados por la IA 🌿
-              </p>
+              {loading ? (
+                <>
+                  <Activity
+                    className="text-green-600 mx-auto mb-4 animate-spin"
+                    size={40}
+                  />
+                  <p className="text-green-800 font-medium">
+                    Analizando imagen...
+                  </p>
+                </>
+              ) : (
+                <>
+                  <Activity className="text-green-600 mx-auto mb-4" size={40} />
+                  <p className="text-green-800 font-medium">
+                    Resultado:{" "}
+                    {JSON.stringify(prediction) || "No se obtuvo resultado"}
+                  </p>
+                </>
+              )}
               <button
-                onClick={() => {
-                  setSelectedImage(null);
-                  setShowResults(false);
-                }}
+                onClick={handleReset}
                 className="mt-6 w-full px-6 py-4 bg-yellow-500 text-green-900 font-semibold rounded-full transition-all duration-300 hover:bg-yellow-400 hover:shadow-lg hover:shadow-yellow-300/50 hover:scale-105"
               >
                 Analizar otra planta
@@ -160,11 +204,11 @@ function App() {
       {/* Footer */}
       <footer className="relative z-10 text-center py-6 mt-12 text-green-900 border-t border-green-200">
         <p className="text-sm font-medium">
-            © 2025 PlantVision — Innovación para el cuidado de tus plantas
+          © 2025 EABS — Innovación para el cuidado de tus plantas
         </p>
       </footer>
     </div>
   );
 }
 
-export default App;
+export default ImageUpload;
