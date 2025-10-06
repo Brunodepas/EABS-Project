@@ -8,12 +8,12 @@ import base64
 
 modelo = load_model("models/modelo_proyecto.h5")
 
-with open("classes.txt", "r") as f:
+with open("./models/classes.txt", "r") as f:
     CLASS_LABELS = [line.strip() for line in f.readlines()]
 
 PLANT_LABELS = list({cls.split("___")[0] for cls in CLASS_LABELS})
 
-def preprocess_image(image_base64, target_size=(224, 224)):
+def preprocess_image(image_base64, target_size=(128, 128)):
     """Convierte Base64 a array compatible con el modelo"""
     image_bytes = image_base64.split(',')[1].encode()
     img = Image.open(io.BytesIO(base64.b64decode(image_bytes)))

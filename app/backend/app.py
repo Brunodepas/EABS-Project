@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from model import predict_plant
 import base64
 import numpy as np
@@ -7,12 +8,13 @@ import io
 
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def index():
     return "Flask backend con IA funcionando!"
 
-@app.route('/predict', methods=['POST'])
+@app.route('/', methods=['POST'])
 def predict():
     data = request.json
     image_base64 = data.get("image")
@@ -23,6 +25,7 @@ def predict():
         prediction = predict_plant(image_base64)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
     return jsonify({"result": prediction})
 
 if __name__ == '__main__':
