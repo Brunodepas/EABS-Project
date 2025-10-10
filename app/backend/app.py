@@ -28,7 +28,6 @@ def predict():
         enfermedad_completa = prediction.get("disease", "healthy")
         confidence = prediction.get("confidence", 0)
 
-        # Separar planta y enfermedad
         if "___" in enfermedad_completa:
             planta_string = enfermedad_completa.split("___")[0]
             enfermedad_string = enfermedad_completa.split("___")[1]
@@ -36,7 +35,6 @@ def predict():
             planta_string = "Unknown"
             enfermedad_string = enfermedad_completa
 
-        # Aplicar traducciones
         planta_espaniol = translations_plants.get(planta_string, "Planta desconocida")
         enfermedad_espaniol = translations_diseases.get(enfermedad_completa, "Enfermedad desconocida")
         recomendacion = treatments_treatments.get(enfermedad_completa, "No hay tratamiento disponible para esta enfermedad.")
