@@ -33,7 +33,12 @@ function ImageUpload() {
         });
 
         const data = await response.json();
-        setPrediction(data.result || data.error);
+        if (data.error) {
+          setPrediction(`Error: ${data.error}`);
+        } else {
+          setPrediction(`${data.planta} - ${data.enfermedad} (${data.confianza} de confianza) (Tratamiento: ${data.recomendacion})`);
+        }
+
       } catch (error) {
         console.error("Error enviando la imagen:", error);
         setPrediction("Error de conexión con el servidor.");
@@ -186,7 +191,7 @@ function ImageUpload() {
                   <Activity className="text-green-600 mx-auto mb-4" size={40} />
                   <p className="text-green-800 font-medium">
                     Resultado:{" "}
-                    {JSON.stringify(prediction) || "No se obtuvo resultado"}
+                    {prediction || "No se obtuvo resultado"}
                   </p>
                 </>
               )}
