@@ -24,24 +24,21 @@ function ImageUpload() {
       setSelectedImage(base64Image);
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:5000/", {
+        const response = await fetch(`http://localhost:5000/?t=${Date.now()}`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ image: base64Image }),
         });
 
         const data = await response.json();
         if (data.error) {
-          setPrediction(`Error: ${data.error}`);
+          setPrediction({ error: data.error });
         } else {
-          setPrediction(`${data.planta} - ${data.enfermedad} (${data.confianza} de confianza) (Tratamiento: ${data.recomendacion})`);
+          setPrediction(data); // ✅ Guardamos el objeto completo
         }
-
       } catch (error) {
         console.error("Error enviando la imagen:", error);
-        setPrediction("Error de conexión con el servidor.");
+        setPrediction({ error: "Error de conexión con el servidor." });
       } finally {
         setLoading(false);
         setShowResults(true);
@@ -115,45 +112,47 @@ function ImageUpload() {
       {/* Main */}
       <main className="relative z-10 max-w-4xl mx-auto px-6 pb-20">
         {/* Upload */}
-        <div className="mb-8">
-          <div
-            onDrop={handleDrop}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setIsDragging(true);
-            }}
-            onDragLeave={() => setIsDragging(false)}
-            className={`bg-white rounded-3xl shadow-lg p-12 border-4 border-dashed transition-all duration-300 ${
-              isDragging
-                ? "border-green-500 bg-green-50 scale-105"
-                : "border-green-200 hover:border-green-300"
-            }`}
-          >
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
-                <Upload className="text-green-600" size={40} />
+        {!showResults && (
+          <div className="mb-8">
+            <div
+              onDrop={handleDrop}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragging(true);
+              }}
+              onDragLeave={() => setIsDragging(false)}
+              className={`bg-white rounded-3xl shadow-lg p-12 border-4 border-dashed transition-all duration-300 ${
+                isDragging
+                  ? "border-green-500 bg-green-50 scale-105"
+                  : "border-green-200 hover:border-green-300"
+              }`}
+            >
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
+                  <Upload className="text-green-600" size={40} />
+                </div>
+                <h2 className="text-2xl font-semibold text-green-900 mb-3">
+                  Sube una foto de tu planta
+                </h2>
+                <p className="text-green-600 mb-6">
+                  Arrastra y suelta o haz clic para seleccionar
+                </p>
+                <label className="inline-block">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileInput}
+                    className="hidden"
+                  />
+                  <span className="px-8 py-4 bg-yellow-500 text-green-900 font-semibold rounded-full cursor-pointer inline-block transition-all duration-300 hover:bg-yellow-400 hover:shadow-lg hover:shadow-yellow-300/50 hover:scale-105">
+                    Seleccionar imagen
+                  </span>
+                </label>
               </div>
-              <h2 className="text-2xl font-semibold text-green-900 mb-3">
-                Sube una foto de tu planta
-              </h2>
-              <p className="text-green-600 mb-6">
-                Arrastra y suelta o haz clic para seleccionar
-              </p>
-              <label className="inline-block">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileInput}
-                  className="hidden"
-                />
-                <span className="px-8 py-4 bg-yellow-500 text-green-900 font-semibold rounded-full cursor-pointer inline-block transition-all duration-300 hover:bg-yellow-400 hover:shadow-lg hover:shadow-yellow-300/50 hover:scale-105">
-                  Seleccionar imagen
-                </span>
-              </label>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Imagen cargada */}
         {selectedImage && (
@@ -186,15 +185,40 @@ function ImageUpload() {
                     Analizando imagen...
                   </p>
                 </>
-              ) : (
+              ) : prediction?.error ? (
                 <>
-                  <Activity className="text-green-600 mx-auto mb-4" size={40} />
-                  <p className="text-green-800 font-medium">
-                    Resultado:{" "}
-                    {prediction || "No se obtuvo resultado"}
+                  <p className="text-red-600 font-semibold mb-4">
+                    ❌ {prediction.error}
                   </p>
                 </>
+              ) : (
+                <>
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold text-green-900 mb-2">
+                      🌿 {prediction.planta}
+                    </h3>
+                    <p className="text-lg text-green-700 mb-2">
+                      <strong>Estado:</strong> {prediction.enfermedad}
+                    </p>
+                    <p className="text-lg text-green-700 mb-2">
+                      <strong>Confianza:</strong> {prediction.confianza}
+                    </p>
+                    {/* <p className="text-sm text-green-500 mb-4 italic">
+                      (Clase original: {prediction.clase_original})
+                    </p> */}
+                  </div>
+
+                  <div className="bg-green-50 p-4 rounded-2xl border border-green-200">
+                    <h4 className="text-xl font-semibold text-green-900 mb-2">
+                      🧴 Recomendación:
+                    </h4>
+                    <p className="text-green-800 leading-relaxed">
+                      {prediction.recomendacion}
+                    </p>
+                  </div>
+                </>
               )}
+
               <button
                 onClick={handleReset}
                 className="mt-6 w-full px-6 py-4 bg-yellow-500 text-green-900 font-semibold rounded-full transition-all duration-300 hover:bg-yellow-400 hover:shadow-lg hover:shadow-yellow-300/50 hover:scale-105"
