@@ -19,7 +19,7 @@ Plantas Incluidas 🌱
 
 ```
 Manzana   Arándano   Cereza   Maíz   Uva
-Naranja   Durazno    Pimienta Papa   Frambuesa
+Naranja   Durazno    Morrón   Papa   Frambuesa
 Soja      Calabaza   Fresa    Tomate
 ```
 
