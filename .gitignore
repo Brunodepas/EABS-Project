@@ -1,0 +1,20 @@
+# Ignorar archivos compilados de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos de entorno o dependencias locales
+.env
+*.sqlite3
+*.db
+
+# Archivos temporales o de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de VSCode
+.vscode/
+
+# Archivos de logs
+*.log

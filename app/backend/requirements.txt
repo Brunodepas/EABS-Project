@@ -1,0 +1,9 @@
+Flask==2.3.2
+numpy
+pandas
+scikit-learn
+scikit-learn
+tensorflow
+pillow
+flask-cors
+# cualquier otra librería de IA que uses
