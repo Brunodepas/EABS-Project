@@ -1,7 +1,6 @@
-// src/pages/Login.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import loginImage from "../assets/login1.jpg"; // ajustá ruta
+import loginImage from "../assets/login1.jpg";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -20,11 +19,10 @@ export default function Login() {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* 65% - Lado blanco */}
       <div className="w-[40%] bg-[#61754B] flex items-center justify-center">
         <form
           onSubmit={handleLogin}
-          className="bg-white p-8 rounded-xl shadow-md w-80 transform transition duration-200 hover:scale-105"
+          className="bg-white p-10 rounded-xl shadow-md w-96 transform transition duration-200 hover:scale-100"
         >
           <h2 className="text-2xl font-bold mb-6 text-center text-[#166534]">
             Iniciar Sesión
@@ -35,7 +33,7 @@ export default function Login() {
             placeholder="Correo electrónico"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 mb-4 border rounded bg-yellow-50"
+            className="w-full p-2 mb-4 border rounded bg-white-50"
           />
 
           <input
@@ -43,7 +41,7 @@ export default function Login() {
             placeholder="Contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 mb-4 border rounded bg-yellow-50"
+            className="w-full p-2 mb-4 border rounded bg-white-50"
           />
 
           <button
@@ -67,7 +65,6 @@ export default function Login() {
         </form>
       </div>
 
-      {/* 35% - Imagen de fondo */}
       <div className="relative w-[60%] h-screen">
         <img
           src={loginImage}
