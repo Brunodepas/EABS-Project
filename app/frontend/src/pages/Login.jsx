@@ -7,14 +7,34 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (email && password) {
-      navigate("/image-upload");
-    } else {
-      alert("Por favor, completá los campos.");
+    if(!email || !password){
+      alert("Completa todos los campos.");
+      return;
     }
+
+    try{
+      const res = await fetch("http://localhost:5000/login", {
+      method: "POST",
+      credentials: "include",   //Lo que hace esto es guardar la cookie en el browser
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if(!res.ok){
+      alert(data.error || "Error iniciando sesion");
+      return;
+    }
+
+    navigate("/image-upload"); //Ruta ya protegida
+     }catch(err){
+      console.error(err);
+      alert("Error conectando al servidor");
+     }
   };
 
   return (
