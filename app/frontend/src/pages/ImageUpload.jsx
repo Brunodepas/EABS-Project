@@ -11,26 +11,33 @@ export default function ImageUpload() {
 
   const handleImageUpload = (file) => {
     const reader = new FileReader();
+
     reader.onloadend = async () => {
       const base64Image = reader.result;
       setSelectedImage(base64Image);
       setLoading(true);
+
       try {
         const response = await fetch(`http://localhost:5000/?t=${Date.now()}`, {
           method: "POST",
+          credentials: "include", // 🔥 NECESARIO
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ image: base64Image }),
         });
+
         const data = await response.json();
         setPrediction(data.error ? { error: data.error } : data);
+
       } catch (err) {
         console.error("Error enviando la imagen:", err);
         setPrediction({ error: "Error de conexión con el servidor." });
+
       } finally {
         setLoading(false);
         setShowResults(true);
       }
     };
+
     reader.readAsDataURL(file);
   };
 
@@ -54,29 +61,33 @@ export default function ImageUpload() {
   };
 
   return (
-    <div className="relative z-10 w-full max-w-4xl mx-auto px-6 pb-20 pt-6">
-      {/* Zona de subida */}
+    <div className="relative z-10 w-full max-w-xl mx-auto px-4 pb-10">
+
+      {/* Caja de subida */}
       {!showResults && (
         <div className="mb-8">
           <div
             onDrop={handleDrop}
             onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
             onDragLeave={() => setIsDragging(false)}
-            className={`bg-white rounded-3xl shadow-lg p-12 border-4 border-dashed transition-all duration-300 ${
+            className={`bg-white rounded-2xl shadow-md p-8 border-2 border-dashed transition-all duration-300 ${
               isDragging ? "border-green-500 bg-green-50 scale-105"
-                         : "border-green-200 hover:border-green-300"
+                         : "border-green-300 hover:border-green-400"
             }`}
           >
             <div className="text-center">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6 shadow-inner">
-                <Upload className="text-green-600" size={40} />
+              <div className="inline-flex items-center justify-center w-14 h-14 bg-green-100 rounded-full mb-4">
+                <Upload className="text-green-600" size={32} />
               </div>
-              <h2 className="text-2xl font-semibold text-green-900 mb-3">
+
+              <h2 className="text-xl font-semibold text-green-900 mb-2">
                 Sube una foto de tu planta
               </h2>
-              <p className="text-green-700 mb-6">
+
+              <p className="text-green-700 mb-4">
                 Arrastra y suelta o haz clic para seleccionar
               </p>
+
               <label className="inline-block">
                 <input
                   ref={fileInputRef}
@@ -85,7 +96,7 @@ export default function ImageUpload() {
                   onChange={handleFileInput}
                   className="hidden"
                 />
-                <span className="px-8 py-4 bg-yellow-500 text-green-900 font-semibold rounded-full cursor-pointer inline-block transition-all duration-300 hover:bg-yellow-400 hover:shadow-lg hover:shadow-yellow-300/50 hover:scale-105">
+                <span className="px-6 py-3 bg-yellow-500 text-green-900 font-semibold rounded-full cursor-pointer inline-block transition-all duration-300 hover:bg-yellow-400 hover:shadow-lg hover:scale-105">
                   Seleccionar imagen
                 </span>
               </label>
@@ -101,6 +112,7 @@ export default function ImageUpload() {
             <h3 className="text-xl font-semibold text-green-900 mb-4 flex items-center gap-2">
               <Leaf className="text-green-600" size={24} /> Imagen cargada
             </h3>
+
             <img
               src={selectedImage}
               alt="Uploaded plant"
@@ -114,6 +126,7 @@ export default function ImageUpload() {
       {showResults && selectedImage && (
         <div className="animate-fade-in">
           <div className="bg-white rounded-3xl shadow-xl p-8 border-4 border-green-300 text-center">
+
             {loading ? (
               <>
                 <Activity className="text-green-600 mx-auto mb-4 animate-spin" size={40} />
@@ -128,21 +141,25 @@ export default function ImageUpload() {
                   <p className="text-lg text-green-700 mb-2"><strong>Estado:</strong> {prediction.enfermedad}</p>
                   <p className="text-lg text-green-700 mb-2"><strong>Confianza:</strong> {prediction.confianza}</p>
                 </div>
+
                 <div className="bg-green-50 p-4 rounded-2xl border border-green-200">
                   <h4 className="text-xl font-semibold text-green-900 mb-2">🧴 Recomendación:</h4>
                   <p className="text-green-800 leading-relaxed">{prediction.recomendacion}</p>
                 </div>
               </>
             )}
+
             <button
               onClick={handleReset}
-              className="mt-6 w-full px-6 py-4 bg-yellow-500 text-green-900 font-semibold rounded-full transition-all duration-300 hover:bg-yellow-400 hover:shadow-lg hover:shadow-yellow-300/50 hover:scale-105"
+              className="mt-6 w-full px-6 py-4 bg-yellow-500 text-green-900 font-semibold rounded-full transition-all duration-300 hover:bg-yellow-400 hover:shadow-lg hover:scale-105"
             >
               Analizar otra planta
             </button>
+
           </div>
         </div>
       )}
+
     </div>
   );
 }
