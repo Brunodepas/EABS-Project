@@ -45,3 +45,40 @@
 .animate-progress {
   animation: progress 1.5s ease-out forwards;
 }
+
+@keyframes floatSlow {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes floatMedium {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes floatFast {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes sway {
+  0% { transform: translateX(0) rotate(0deg); }
+  50% { transform: translateX(10px) rotate(3deg); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+
+@keyframes swayRev {
+  0% { transform: translateX(0) rotate(0deg); }
+  50% { transform: translateX(-10px) rotate(-3deg); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+
+.animate-float-slow { animation: floatSlow 9s ease-in-out infinite; }
+.animate-float-medium { animation: floatMedium 7s ease-in-out infinite; }
+.animate-float-fast { animation: floatFast 5s ease-in-out infinite; }
+.animate-sway { animation: sway 6s ease-in-out infinite; }
+.animate-sway-rev { animation: swayRev 6s ease-in-out infinite; }
+
