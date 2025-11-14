@@ -1,18 +1,14 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+
 import MainLayout from "./components/MainLayout";
 import ImageUpload from "./pages/ImageUpload";
-import Register from "./pages/Register";
-import { useLocation } from "react-router-dom";
+import History from "./pages/History";
+import HistoryDetail from "./pages/HistoryDetail";
 
-// Función para proteger rutas privadas
-function PrivateRoute({ children }) {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
-}
+import PrivateRoute from "./routes/PrivateRoute";
 
 function App() {
   return (
@@ -28,9 +24,32 @@ function App() {
         <Route
           path="/image-upload"
           element={
-            <MainLayout>
-              <ImageUpload />
-            </MainLayout>
+            <PrivateRoute>
+              <MainLayout>
+                <ImageUpload />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/history"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <History />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/history/:id"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <HistoryDetail />
+              </MainLayout>
+            </PrivateRoute>
           }
         />
 
