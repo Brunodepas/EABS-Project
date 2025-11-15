@@ -18,9 +18,9 @@ El objetivo principal es ayudar a agricultores y aficionados a la jardinería a 
 Plantas Incluidas 🌱
 
 ```
-Manzana   Arándano   Cereza   Maíz   Uva
-Naranja   Durazno    Morrón   Papa   Frambuesa
-Soja      Calabaza   Fresa    Tomate
+Manzana    Arándano    Cereza    Maíz    Uva
+Naranja    Durazno     Morrón    Papa    Frambuesa
+Soja       Calabaza    Fresa     Tomate
 ```
 
 
