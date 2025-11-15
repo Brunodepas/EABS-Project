@@ -15,6 +15,11 @@ export default function Login() {
       return;
     }
 
+    if (!email.includes("@") || !email.includes(".")) {
+      alert("Ingresá un email válido.");
+      return;
+    }
+
     try{
       const res = await fetch("http://localhost:5000/login", {
       method: "POST",
@@ -42,6 +47,7 @@ export default function Login() {
       <div className="w-[40%] bg-[#61754B] flex items-center justify-center">
         <form
           onSubmit={handleLogin}
+          noValidate
           className="bg-white p-10 rounded-xl shadow-md w-96 transform transition duration-200 hover:scale-100"
         >
           <h2 className="text-2xl font-bold mb-6 text-center text-[#166534]">
@@ -79,7 +85,7 @@ export default function Login() {
 
           <div className="text-sm mt-2 text-center">
             <Link to="/register" className="text-[#166534] hover:underline">
-              No tienes una cuenta?
+              ¿No tienes una cuenta?
             </Link>
           </div>
         </form>
