@@ -35,6 +35,11 @@ def predict():
     try:
         prediction = predict_plant(image_base64)
         
+        print("\n========== DEBUG FLASK ==========")
+        print("prediction dict:", prediction)
+        print("enfermedad_completa:", prediction.get("disease"))
+        print("confidence:", prediction.get("confidence"))
+        print("=================================\n")
         if "error" in prediction:
             return jsonify({"error": f"Error en el modelo: {prediction['error']}"}), 500
 
@@ -45,12 +50,36 @@ def predict():
             planta_string = enfermedad_completa.split("___")[0]
             enfermedad_string = enfermedad_completa.split("___")[1]
         else:
-            planta_string = "Unknown"
-            enfermedad_string = enfermedad_completa
+            partes = enfermedad_completa.split("_")
 
+            if partes[0] == "healthy":
+                # healthy_bean -> bean, healthy
+                planta_string = partes[1]
+                enfermedad_string = "healthy"
+
+            elif partes[0] == "diseased":
+                # diseased_cucumber -> cucumber, diseased
+                planta_string = partes[1]
+                enfermedad_string = "diseased"
+
+            else:
+                # lemon_citrus_canker -> lemon, citrus_canker
+                # bean_rust -> bean, rust
+                planta_string = partes[0]
+                enfermedad_string = "_".join(partes[1:])
+
+        print("\n----- DEBUG SPLIT -----")
+        print("planta_string:", planta_string)
+        print("enfermedad_string:", enfermedad_string)
+        print("------------------------\n")
         planta_espaniol = translations_plants.get(planta_string, "Planta desconocida")
         enfermedad_espaniol = translations_diseases.get(enfermedad_completa, "Enfermedad desconocida")
         recomendacion = treatments_treatments.get(enfermedad_completa, "No hay tratamiento disponible para esta enfermedad.")
+        print("\n----- DEBUG TRANSLATIONS -----")
+        print("translations_plants.get:", translations_plants.get(planta_string))
+        print("translations_diseases.get:", translations_diseases.get(enfermedad_completa))
+        print("treatments.get:", treatments_treatments.get(enfermedad_completa))
+        print("-------------------------------\n")
 
         result = {
             "planta": planta_espaniol,
