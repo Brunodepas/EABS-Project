@@ -7,6 +7,7 @@ import MainLayout from "./components/MainLayout";
 import ImageUpload from "./pages/ImageUpload";
 import History from "./pages/History";
 import HistoryDetail from "./pages/HistoryDetail";
+import Account from "./pages/Account";
 
 import PrivateRoute from "./routes/PrivateRoute";
 
@@ -21,6 +22,8 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         {/* Rutas privadas */}
+        
+        {/*Diagnostico */}
         <Route
           path="/image-upload"
           element={
@@ -32,6 +35,7 @@ function App() {
           }
         />
 
+        {/*Historial*/}
         <Route
           path="/history"
           element={
@@ -52,6 +56,20 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        {/*Cuenta*/}
+        <Route
+          path="/account"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <Account />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+
+
 
       </Routes>
     </Router>
