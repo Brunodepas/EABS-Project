@@ -6,11 +6,19 @@ plantasReconocidas = [
     "Uva",
     "Naranja",
     "Durazno",
-    "Pimienta",
+    "Pimiento morrón",
     "Papa",
     "Frambuesa",
     "Soja",
     "Calabaza",
     "Fresa",
-    "Tomate"
+    "Tomate",
+    "Poroto",
+    "Algodón",
+    "Pepino",
+    "Guayaba",
+    "Limón",
+    "Arroz",
+    "Caña de azúcar",
+    "Trigo"
 ]
