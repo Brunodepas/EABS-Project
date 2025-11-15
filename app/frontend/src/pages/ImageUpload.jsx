@@ -20,7 +20,7 @@ export default function ImageUpload() {
       try {
         const response = await fetch(`http://localhost:5000/?t=${Date.now()}`, {
           method: "POST",
-          credentials: "include", // 🔥 NECESARIO
+          credentials: "include", 
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ image: base64Image }),
         });
@@ -61,7 +61,7 @@ export default function ImageUpload() {
   };
 
   return (
-    <div className="relative z-10 w-full max-w-xl mx-auto px-4 pb-10">
+    <div className="p-6 pl-28">
 
       {/* Caja de subida */}
       {!showResults && (
