@@ -7,4 +7,5 @@ tensorflow
 pillow
 flask-cors
 SQLAlchemy
+sib_api_v3_sdk
 # cualquier otra librería de IA que uses
