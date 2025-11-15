@@ -4,6 +4,9 @@ from mappings.translations import plants as translations_plants, diseases as tra
 from mappings.treatments import treatments as treatments_treatments
 from model import predict_plant
 import os
+import sib_api_v3_sdk
+from sib_api_v3_sdk.rest import ApiException
+import random
 from db.database import Base, engine, SessionLocal
 from db.models_db import User, PredictionHistory
 from werkzeug.security import generate_password_hash
@@ -14,7 +17,8 @@ import pytz
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "clave-secreta-para-dev")
 CORS(app, supports_credentials=True)
-
+api_key = os.getenv("BREVO_API_KEY")
+reset_codes = {}
 Base.metadata.create_all(bind=engine)
 
 @app.route('/')
@@ -261,6 +265,205 @@ def update_profile():
         
     finally:
         db.close()
+
+@app.route("/change-password", methods=["POST"])
+def change_password():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "Usuario no logueado"}), 401
+
+    data = request.get_json()
+    old_password = data.get("old_password")
+    new_password = data.get("new_password")
+
+    if not old_password or not new_password:
+        return jsonify({"error": "Faltan datos"}), 400
+
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter_by(id=user_id).first()
+
+        # Verificar contraseña actual
+        if not check_password_hash(user.password, old_password):
+            return jsonify({"error": "La contraseña actual es incorrecta"}), 400
+
+        # Actualizar a la nueva
+        user.password = generate_password_hash(new_password)
+        db.commit()
+
+        return jsonify({"message": "Contraseña actualizada correctamente"}), 200
+
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        db.close()
+
+
+@app.route("/restore-history", methods=["POST"])
+def restore_history():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "Usuario no logueado"}), 401
+
+    db = SessionLocal()
+    try:
+        db.query(PredictionHistory).filter_by(user_id=user_id).delete()
+        db.commit()
+        return jsonify({"message": "Historial restaurado correctamente"}), 200
+    
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        db.close()
+
+@app.route("/delete-account", methods=["POST"])
+def delete_account():
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "Usuario no logueado"}), 401
+
+    db = SessionLocal()
+    try:
+        # Borrar historial del usuario primero
+        db.query(PredictionHistory).filter_by(user_id=user_id).delete()
+
+        # Borrar el usuario
+        db.query(User).filter_by(id=user_id).delete()
+        db.commit()
+
+        session.clear()
+
+        return jsonify({"message": "Cuenta eliminada correctamente"}), 200
+
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        db.close()
+
+
+@app.route("/forgot-password", methods=['POST'])
+def forgot_password():
+    data = request.get_json()
+    email = data.get("email")
+
+    if not email:
+        return jsonify({"message": "Email requerido"}), 400
+
+    db = SessionLocal()
+    user = db.query(User).filter_by(email=email).first()
+    db.close()
+
+    # Siempre respondemos igual (seguridad)
+    if not user:
+        return jsonify({"message": "Si el correo existe, enviaremos un código."}), 200
+
+    code = str(random.randint(100000, 999999))
+    reset_codes[email] = code  
+
+    print(f"[DEBUG] Código generado para {email}: {code}")
+
+    html = f"""
+        <h2>Hola {user.username}</h2>
+        <p>Recibimos una solicitud para recuperar tu cuenta.</p>
+        <p>Tu código de recuperación es:</p>
+        <h1 style='font-size:32px; letter-spacing:4px;'>{code}</h1>
+        <p>Usalo en la página para continuar.</p>
+        <br/>
+        <p>Si no solicitaste esto, podés ignorar el mensaje.</p>
+    """
+
+    ok = send_email(email, "Código de recuperación", html)
+
+    if not ok:
+        return jsonify({"message": "Error enviando correo."}), 500
+
+    return jsonify({"message": "Si el correo existe, enviaremos un código."}), 200
+
+
+
+def send_email(to_email, subject, html):
+    api_key = os.getenv("BREVO_API_KEY")
+
+    if not api_key:
+        print("[ERROR] No existe BREVO_API_KEY en las variables de entorno.")
+        return False
+
+    configuration = sib_api_v3_sdk.Configuration()
+    configuration.api_key["api-key"] = api_key
+
+    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
+        sib_api_v3_sdk.ApiClient(configuration)
+    )
+
+    email = sib_api_v3_sdk.SendSmtpEmail(
+        to=[{"email": to_email}],
+        sender={"email": "aguscesari14@gmail.com", "name": "EABS Project"},
+        subject=subject,
+        html_content=html
+    )
+
+    try:
+        api_instance.send_transac_email(email)
+        print(f"[OK] Email enviado a {to_email}")
+        return True
+
+    except ApiException as e:
+        print("[ERROR] Falló el envío:", e)
+        return False
+
+@app.route("/validate-code", methods=["POST"])
+def validate_code():
+    data = request.get_json()
+    email = data.get("email")
+    code = data.get("code")
+
+    if not email or not code:
+        return jsonify({"error": "Datos incompletos"}), 400
+
+    real_code = reset_codes.get(email)
+
+    if not real_code:
+        return jsonify({"error": "No existe un código para este email"}), 400
+
+    if str(real_code) != str(code):
+        return jsonify({"error": "Código incorrecto"}), 400
+
+    return jsonify({"message": "Código validado correctamente"}), 200
+
+@app.route("/reset-password", methods=["POST"])
+def reset_password():
+    data = request.get_json()
+    email = data.get("email")
+    new_password = data.get("password")
+
+    if not email or not new_password:
+        return jsonify({"error": "Datos incompletos"}), 400
+
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter_by(email=email).first()
+
+        if not user:
+            return jsonify({"error": "Usuario no encontrado"}), 404
+
+        user.password = generate_password_hash(new_password)
+        db.commit()
+
+        return jsonify({"message": "Contraseña actualizada correctamente"}), 200
+
+    except Exception as e:
+        db.rollback()
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        db.close()
+
 
 
 if __name__ == '__main__':

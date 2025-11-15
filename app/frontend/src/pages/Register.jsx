@@ -25,6 +25,11 @@ export default function Register() {
       return;
     }
 
+    if (!email.includes("@") || !email.includes(".")) {
+      alert("Ingresá un email válido.");
+      return;
+    }
+
     const username = `${name} ${nickname}`;
 
     try {
@@ -71,6 +76,7 @@ export default function Register() {
       <div className="w-[40%] bg-[#8DA491] flex items-center justify-center">
         <form
           onSubmit={handleRegister}
+          noValidate
           className="bg-white p-8 rounded-xl shadow-md w-80 transform transition duration-200 hover:scale-100"
         >
           <h2 className="text-2xl font-bold mb-6 text-center text-[#475439]">
@@ -123,7 +129,7 @@ export default function Register() {
             {["plant1", "plant2", "plant3", "plant4", "plant5"].map((img) => (
               <img
                 key={img}
-                src={`/src/assets/profile/${img}.jpg`}
+                src={`/profile/${img}.jpg`}
                 alt={img}
                 onClick={() => setProfileImage(img)}
                 className={`w-14 h-14 rounded-full cursor-pointer border-2

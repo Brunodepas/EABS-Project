@@ -2,16 +2,16 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import loginImage from "../assets/login1.jpg";
 
-export default function Login() {
+export default function EnterCode() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(!email || !password){
-      alert("Completa todos los campos.");
+    if (!email || !code) {
+      alert("Completá ambos campos.");
       return;
     }
 
@@ -20,53 +20,66 @@ export default function Login() {
       return;
     }
 
-    try{
-      const res = await fetch("http://localhost:5000/login", {
-      method: "POST",
-      credentials: "include",   //Lo que hace esto es guardar la cookie en el browser
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch("http://localhost:5000/validate-code", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, code }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if(!res.ok){
-      alert(data.error || "Error iniciando sesion");
-      return;
-    }
+      if (!res.ok) {
+        alert(data.error || "Código incorrecto.");
+        return;
+      }
 
-    navigate("/image-upload"); //Ruta ya protegida
-     }catch(err){
+      alert("Código validado correctamente.");
+      
+      navigate("/reset-password", { state: { email } });
+
+
+    } catch (err) {
       console.error(err);
-      alert("Error conectando al servidor");
-     }
+      alert("Error verificando código.");
+    }
   };
 
   return (
     <div className="flex h-screen overflow-hidden">
+
+      {/* FORMULARIO IZQUIERDA */}
       <div className="w-[40%] bg-[#61754B] flex items-center justify-center">
+        
         <form
-          onSubmit={handleLogin}
-          noValidate
+          onSubmit={handleSubmit}
           className="bg-white p-10 rounded-xl shadow-md w-96 transform transition duration-200 hover:scale-100"
         >
           <h2 className="text-2xl font-bold mb-6 text-center text-[#166534]">
-            Iniciar Sesión
+            Ingresar Código
           </h2>
 
+          <p className="text-center text-gray-600 mb-4">
+            Te enviamos un código de 6 dígitos a tu correo. Ingresalo aquí.
+          </p>
+
+          {/* EMAIL */}
           <input
             type="email"
-            placeholder="Correo electrónico"
+            placeholder="Tu correo electrónico"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full p-2 mb-4 border rounded bg-white-50"
           />
 
+          {/* CODIGO */}
           <input
-            type="password"
-            placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            type="text"
+            maxLength={6}
+            placeholder="Código de 6 dígitos"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
             className="w-full p-2 mb-4 border rounded bg-white-50"
           />
 
@@ -74,27 +87,22 @@ export default function Login() {
             type="submit"
             className="w-full bg-[#16A34A] text-white py-2 rounded hover:bg-[#15803D] transition"
           >
-            Entrar
+            Validar código
           </button>
 
           <div className="text-sm mt-4 text-center">
             <Link to="/forgot-password" className="text-[#166534] hover:underline">
-              ¿Olvidaste tu contraseña?
-            </Link>
-          </div>
-
-          <div className="text-sm mt-2 text-center">
-            <Link to="/register" className="text-[#166534] hover:underline">
-              ¿No tienes una cuenta?
+              Volver atrás
             </Link>
           </div>
         </form>
       </div>
 
+      {/* IMAGEN DERECHA */}
       <div className="relative w-[60%] h-screen">
         <img
           src={loginImage}
-          alt="Imagen de bienvenida"
+          alt="Imagen"
           className="absolute inset-0 w-full h-full object-cover object-[90%_center]"
         />
       </div>

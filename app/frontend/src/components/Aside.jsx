@@ -45,7 +45,7 @@ export default function Aside() {
 
             {profileImage ? (
               <img
-                src={`/src/assets/profile/${profileImage}.jpg`}
+                src={`/profile/${profileImage}.jpg`}
                 alt="Perfil"
                 className="w-full h-full object-cover rounded-full"
               />

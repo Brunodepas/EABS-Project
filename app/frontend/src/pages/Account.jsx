@@ -43,7 +43,11 @@ export default function Account() {
       fetch("http://localhost:5000/restore-history", {
         method: "POST",
         credentials: "include",
-      }).then(() => window.location.reload());
+      }) .then(res => res.json())
+          .then(() => {
+            alert("Historial actualizado correctamente.");
+            navigate("/history"); // o donde quieras
+          });
     }
   };
 
@@ -66,10 +70,15 @@ export default function Account() {
         body: JSON.stringify({
         username: newUsername,
         email: newEmail,
-        profile_image: profileImage, // 🔥 IMPORTANTE
+        profile_image: profileImage,
         }),
-    }).then(() => window.location.reload());
+    }).then(() => {
+        alert("Cambios actualizados correctamente.");
+        navigate("/account");
+    });
+
   };
+
 
 
   // Cambiar contraseña
@@ -93,7 +102,7 @@ export default function Account() {
     <div className="p-6 pl-28 pr-10">
       <div className="relative flex justify-center mb-8">
         <img
-            src={`/src/assets/profile/${profileImage}.jpg`}
+            src={`/profile/${profileImage}.jpg`}
             onClick={() => setShowPicker(true)}   
             className="w-36 h-36 rounded-full border-4 border-green-500 shadow-lg object-cover
                     cursor-pointer transition duration-300 hover:opacity-40"
@@ -235,7 +244,7 @@ export default function Account() {
               {profileOptions.map((img) => (
                 <img
                     key={img}
-                    src={`/src/assets/profile/${img}.jpg`}
+                    src={`/profile/${img}.jpg`}
                     onClick={() => {
                         setProfileImage(img);
                         localStorage.setItem("profileImage", img);
