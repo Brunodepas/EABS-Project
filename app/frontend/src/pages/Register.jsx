@@ -10,6 +10,7 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [profileImage, setProfileImage] = useState("plant1");
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -24,18 +25,18 @@ export default function Register() {
       return;
     }
 
-    // 🔥 Backend espera: username, email, password
     const username = `${name} ${nickname}`;
 
     try {
       const response = await fetch("http://localhost:5000/register", {
         method: "POST",
-        credentials: "include", // Por si futura sesión en register
+        credentials: "include", 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username,
           email,
           password,
+          profile_image: profileImage
         }),
       });
 
@@ -115,6 +116,23 @@ export default function Register() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             className="w-full p-2 mb-4 border rounded bg-white-50"
           />
+
+          <h3 className="text-md font-semibold mb-2 text-center">Elegí una foto de perfil</h3>
+
+          <div className="grid grid-cols-5 gap-3 mb-4">
+            {["plant1", "plant2", "plant3", "plant4", "plant5"].map((img) => (
+              <img
+                key={img}
+                src={`/src/assets/profile/${img}.jpg`}
+                alt={img}
+                onClick={() => setProfileImage(img)}
+                className={`w-14 h-14 rounded-full cursor-pointer border-2
+                  ${profileImage === img ? "border-green-600 scale-110" : "border-transparent"}
+                  transition`}
+              />
+            ))}
+          </div>
+
 
           <button
             type="submit"
