@@ -8,6 +8,8 @@ from db.database import Base, engine, SessionLocal
 from db.models_db import User, PredictionHistory
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
+from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "clave-secreta-para-dev")
@@ -61,13 +63,15 @@ def predict():
         if user_id:
             db = SessionLocal()
             try: 
+                argentina_tz = pytz.timezone("America/Argentina/Buenos_Aires")
                 new_prediction = PredictionHistory(
-                    user_id = user_id,
-                    plant_name = planta_espaniol,
-                    disease_name = enfermedad_espaniol,
-                    recommendation = recomendacion,
-                    confidence = float(confidence),
-                    image = image_base64
+                    user_id=user_id,
+                    plant_name=planta_espaniol,
+                    disease_name=enfermedad_espaniol,
+                    recommendation=recomendacion,
+                    confidence=float(confidence),
+                    image=image_base64,
+                    created_at=datetime.now(argentina_tz) 
                 )
                 db.add(new_prediction)
                 db.commit()
@@ -183,6 +187,37 @@ def get_user_history():
     db = SessionLocal()
     try: 
         preds = (
+            db.query(PredictionHistory).filter_by(user_id=user_id)
+            .order_by(PredictionHistory.created_at.desc())
+            .all()
+        )
+
+        history = []
+        for p in preds:
+            history.append({
+                "id": p.id,
+                "plant_name": p.plant_name,
+                "disease_name": p.disease_name,
+                "recommendation": p.recommendation,
+                "confidence": p.confidence,
+                "image": p.image,  
+                "date": p.created_at.isoformat() if p.created_at else None
+            })
+        return jsonify(history), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+    finally:
+        db.close()
+
+    user_id = session.get("user_id")
+    if not user_id:
+        return jsonify({"error": "Usuario no logueado"}),401
+    
+    db = SessionLocal()
+    try: 
+        preds = (
             db.query(PredictionHistory).filter_by(user_id=user_id).order_by(PredictionHistory.created_at.desc()).all()
         )
 
@@ -194,6 +229,7 @@ def get_user_history():
                 "disease_name": p.disease_name,
                 "recommendation": p.recommendation,
                 "confidence": p.confidence,
+                "image": p.image,
                 "date": p.created_at.isoformat() if p.created_at else None
             })
         return jsonify(history), 200
