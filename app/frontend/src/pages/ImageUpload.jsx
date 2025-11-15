@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Upload, Leaf, Activity } from "lucide-react";
+import { Upload, Leaf, Activity, Info } from "lucide-react";
 
 export default function ImageUpload() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -20,7 +20,7 @@ export default function ImageUpload() {
       try {
         const response = await fetch(`http://localhost:5000/?t=${Date.now()}`, {
           method: "POST",
-          credentials: "include", 
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ image: base64Image }),
         });
@@ -62,6 +62,29 @@ export default function ImageUpload() {
 
   return (
     <div className="p-6 pl-28">
+
+      {/* ⭐⭐⭐ TUTORIAL – MODERNO Y MINIMALISTA ⭐⭐⭐ */}
+      {!showResults && (
+        <div className="mb-10 bg-white/70 backdrop-blur-sm border border-green-200 rounded-2xl p-5 shadow-sm animate-fade-in">
+          <div className="flex items-center gap-3 mb-3">
+            <Info className="text-green-700" size={22} />
+            <h2 className="text-lg font-semibold text-green-900">
+              ¿Cómo funciona este análisis?
+            </h2>
+          </div>
+
+          <ul className="text-green-800 text-sm space-y-2 leading-relaxed">
+            <li>• Subí una foto clara de una hoja o planta.</li>
+            <li>• Nuestro sistema usa IA para detectar la especie y su estado.</li>
+            <li>• El análisis tarda unos segundos y verás:
+              <span className="font-semibold"> planta </span>,
+              <span className="font-semibold"> enfermedad </span> (si es que existe),
+              <span className="font-semibold"> confianza </span> y
+              <span className="font-semibold"> tratamiento recomendado</span>.
+            </li>
+          </ul>
+        </div>
+      )}
 
       {/* Caja de subida */}
       {!showResults && (

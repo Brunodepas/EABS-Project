@@ -71,7 +71,7 @@ def predict():
                     recommendation=recomendacion,
                     confidence=float(confidence),
                     image=image_base64,
-                    created_at=datetime.now(argentina_tz) 
+                    created_at=datetime.now(argentina_tz)
                 )
                 db.add(new_prediction)
                 db.commit()
@@ -92,6 +92,7 @@ def register():
     username = data.get("username")
     email = data.get("email")
     password = data.get("password")
+    profile_image = data.get("profile_image")
 
     if not username or not email or not password:
         return jsonify({"error": "Todos los campos son obligatorios"}), 400
@@ -107,7 +108,8 @@ def register():
         new_user = User(
             username = username,
             email = email,
-            password = hashed_password
+            password = hashed_password,
+            profile_image = profile_image
         )
 
         db.add(new_user)
@@ -170,7 +172,8 @@ def me():
 
     return jsonify({
         "username": user.username,
-        "email": user.email
+        "email": user.email,
+        "profile_image": user.profile_image
     }), 200
 
 @app.route("/logout", methods=['POST'])
@@ -211,34 +214,54 @@ def get_user_history():
     finally:
         db.close()
 
+@app.route("/update-profile", methods=["PUT"])
+def update_profile():
     user_id = session.get("user_id")
     if not user_id:
-        return jsonify({"error": "Usuario no logueado"}),401
-    
-    db = SessionLocal()
-    try: 
-        preds = (
-            db.query(PredictionHistory).filter_by(user_id=user_id).order_by(PredictionHistory.created_at.desc()).all()
-        )
+        return jsonify({"error": "No hay usuario logueado"}), 400
 
-        history = []
-        for p in preds:
-            history.append({
-                "id": p.id,
-                "plant_name": p.plant_name,
-                "disease_name": p.disease_name,
-                "recommendation": p.recommendation,
-                "confidence": p.confidence,
-                "image": p.image,
-                "date": p.created_at.isoformat() if p.created_at else None
-            })
-        return jsonify(history), 200
-    
+    data = request.get_json(silent=True) or {}
+    username = data.get("username")
+    email = data.get("email")
+    profile_image = data.get("profile_image")
+
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter_by(id=user_id).first()
+        if not user:
+            return jsonify({"error": "Usuario no encontrado"}), 404
+
+        # Verificar si el email o username ya están en uso por OTRO usuario
+        if email and db.query(User).filter(User.email == email, User.id != user_id).first():
+            return jsonify({"error": "El email ya está en uso"}), 400
+
+        if username and db.query(User).filter(User.username == username, User.id != user_id).first():
+            return jsonify({"error": "El nombre de usuario ya está en uso"}), 400
+
+        # Actualizar los campos
+        if username:
+            user.username = username
+        if email:
+            user.email = email
+        if profile_image:
+            user.profile_image = profile_image
+
+        db.commit()
+
+        return jsonify({
+            "message": "Perfil actualizado correctamente",
+            "username": user.username,
+            "email": user.email,
+            "profile_image": user.profile_image
+        })
+
     except Exception as e:
+        db.rollback()
         return jsonify({"error": str(e)}), 500
-    
+        
     finally:
         db.close()
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)  
