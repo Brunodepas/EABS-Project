@@ -1,5 +1,5 @@
 import React from "react";
-import { Leaf, Image, History, Settings, User, LogOut } from "lucide-react";
+import { Leaf, Image, Library, History, User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./Aside.css";
 
@@ -55,7 +55,7 @@ export default function Aside() {
           </button>
 
           {/* Cuenta */}
-          <button onClick={() => navigate("/cuenta")} className="relative group flex flex-col items-center w-full py-3 rounded-xl hover:scale-110 transition">
+          <button onClick={() => navigate("/account")} className="relative group flex flex-col items-center w-full py-3 rounded-xl hover:scale-110 transition">
             <User className="w-6 h-6" />
             <span className="absolute left-20 top-1/2 -translate-y-1/2 
               bg-gray-900 text-white text-xs px-2 py-1 rounded-md 
@@ -64,6 +64,18 @@ export default function Aside() {
             </span>
           </button>
 
+          {/* Biblioteca de planta */}
+          <button onClick={() => navigate("/library")} className="relative group flex flex-col items-center w-full py-3 rounded-xl hover:scale-110 transition">
+            <Library className="w-6 h-6"/>
+            <span className="absolute left-20 top-1/2 -translate-y-1/2 
+              bg-gray-900 text-white text-xs px-2 py-1 rounded-md 
+              opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+              Galeria Verde
+            </span>
+          </button>
+
+        </nav>
+      </div>
           {/* Logout */}
           <button onClick={handleLogout} className="relative group flex flex-col items-center w-full py-3 rounded-xl hover:scale-110 transition">
             <LogOut className="w-6 h-6" />
@@ -73,19 +85,6 @@ export default function Aside() {
               Cerrar sesión
             </span>
           </button>
-
-        </nav>
-      </div>
-
-      {/* Configuración */}
-      <button onClick={() => navigate("/configuracion")} className="relative group flex flex-col items-center w-full py-3 rounded-xl hover:scale-110 transition mb-4">
-        <Settings className="w-6 h-6" />
-        <span className="absolute left-20 top-1/2 -translate-y-1/2 
-          bg-gray-900 text-white text-xs px-2 py-1 rounded-md 
-          opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-          Configuración
-        </span>
-      </button>
     </aside>
   );
 }
