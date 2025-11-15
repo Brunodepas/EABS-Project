@@ -10,6 +10,7 @@ class User(Base):
     username = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
+    profile_image = Column(Text, nullable=True)
 
 class PredictionHistory(Base):
     __tablename__ = "predictions"
@@ -22,3 +23,4 @@ class PredictionHistory(Base):
     confidence = Column(Float, nullable=False)
     image = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True))
+    
