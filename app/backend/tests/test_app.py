@@ -80,19 +80,19 @@ def test_predict_no_separator(monkeypatch, client):
 
 def test_predict_healthy(monkeypatch, client):
     def fake_predict_plant(_):
-        return {"disease": "healthy_bean", "confidence": 0.66}
+        return {"disease": "healthy_Soybean", "confidence": 0.66}
 
     monkeypatch.setattr("app.predict_plant", fake_predict_plant)
-    monkeypatch.setattr("app.translations_plants", {})
+    monkeypatch.setattr("app.translations_plants", {"Soybean": "Soja"})
     monkeypatch.setattr("app.translations_diseases", {})
     monkeypatch.setattr("app.treatments_treatments", {})
 
     response = client.post("/", json={"image": "x"})
     data = response.get_json()
 
-    assert data["planta_original"] == "bean"
+    assert data["planta_original"] == "Soybean"
     assert data["enfermedad_original"] == "healthy"
-    assert data["planta"] == "Planta desconocida"
+    assert data["planta"] == "Soja"
 
 def test_predict_diseased(monkeypatch, client):
     def fake_predict_plant(_):
@@ -123,3 +123,4 @@ def test_predict_withoutDoubleUnderScore(monkeypatch, client):
 
     assert data["planta_original"] == "bean"
     assert data["enfermedad_original"] == "rust"
+    
