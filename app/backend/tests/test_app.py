@@ -93,7 +93,7 @@ def test_predict_healthy(monkeypatch, client):
     assert data["planta_original"] == "bean"
     assert data["enfermedad_original"] == "healthy"
     assert data["planta"] == "Planta desconocida"
-    
+
 def test_predict_diseased(monkeypatch, client):
     def fake_predict_plant(_):
         return {"disease": "diseased_cucumber", "confidence": 0.81}
@@ -108,3 +108,18 @@ def test_predict_diseased(monkeypatch, client):
 
     assert data["planta_original"] == "cucumber"
     assert data["enfermedad_original"] == "diseased"
+
+def test_predict_withoutDoubleUnderScore(monkeypatch, client):
+    def fake_predict_plant(_):
+        return {"disease": "bean_rust", "confidence": 0.42}
+
+    monkeypatch.setattr("app.predict_plant", fake_predict_plant)
+    monkeypatch.setattr("app.translations_plants", {})
+    monkeypatch.setattr("app.translations_diseases", {})
+    monkeypatch.setattr("app.treatments_treatments", {})
+
+    response = client.post("/", json={"image": "x"})
+    data = response.get_json()
+
+    assert data["planta_original"] == "bean"
+    assert data["enfermedad_original"] == "rust"
