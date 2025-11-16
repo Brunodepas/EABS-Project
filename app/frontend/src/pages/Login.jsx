@@ -35,7 +35,7 @@ export default function Login() {
       return;
     }
 
-    navigate("/image-upload"); //Ruta ya protegida
+    navigate("/home"); //Ruta ya protegida
      }catch(err){
       console.error(err);
       alert("Error conectando al servidor");
