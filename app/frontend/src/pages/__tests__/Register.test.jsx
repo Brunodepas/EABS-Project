@@ -59,7 +59,6 @@ test("muestra alerta si hay campos vacios", async () => {
 test("muestra alerta cuando las contraseñas no son iguales", async () => {
 
   const alertMock = vi.spyOn(window, "alert").mockImplementation(() => {});
-  const fetchMock = vi.spyOn(global, "fetch").mockImplementation(() => {});
 
   render(
     <MemoryRouter>
