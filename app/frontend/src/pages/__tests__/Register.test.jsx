@@ -1,6 +1,7 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Register from "../Register";
+import { vi } from "vitest";
 
 test("Inicializacion de Register", () => {
   render(
@@ -33,4 +34,25 @@ test("Inicializacion de Register", () => {
   expect(profilePics.length).toBeGreaterThanOrEqual(5);
 
 
+});
+
+test("muestra alerta si hay campos vacios", async () => {
+
+  const alertMock = vi.spyOn(window, "alert").mockImplementation(() => {});
+
+  render(
+    <MemoryRouter>
+      <Register />
+    </MemoryRouter>
+  );
+
+  //no llenamos campos//
+
+  const BotonRegistrarme = screen.getByRole("button", { name: /registrarme/i });
+
+  fireEvent.click(BotonRegistrarme);
+
+  expect(alertMock).toHaveBeenCalledWith("Por favor, completa todos los campos.");
+
+  alertMock.mockRestore(); //se resetea el mock 
 });
