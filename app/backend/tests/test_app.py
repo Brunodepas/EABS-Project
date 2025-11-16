@@ -123,4 +123,3 @@ def test_predict_withoutDoubleUnderScore(monkeypatch, client):
 
     assert data["planta_original"] == "bean"
     assert data["enfermedad_original"] == "rust"
-    
