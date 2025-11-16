@@ -54,5 +54,44 @@ test("muestra alerta si hay campos vacios", async () => {
 
   expect(alertMock).toHaveBeenCalledWith("Por favor, completa todos los campos.");
 
-  alertMock.mockRestore(); //se resetea el mock 
+});
+
+test("muestra alerta cuando las contraseñas no son iguales", async () => {
+
+  const alertMock = vi.spyOn(window, "alert").mockImplementation(() => {});
+  const fetchMock = vi.spyOn(global, "fetch").mockImplementation(() => {});
+
+  render(
+    <MemoryRouter>
+      <Register />
+    </MemoryRouter>
+  );
+
+  fireEvent.change(screen.getByPlaceholderText(/Nombre/i), {
+    target: { value: "Juan" },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText(/Apellido/i), {
+    target: { value: "Mitre" },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText(/Correo electrónico/i), {
+    target: { value: "juanceto01@gmail.com" },
+  });
+
+  // contrasenias distintas
+  fireEvent.change(screen.getByPlaceholderText("Contraseña"), {
+    target: { value: "123456" },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText("Confirmar contraseña"), {
+    target: { value: "abcdef" },
+  });
+
+  // apretamos registrarme
+  fireEvent.click(screen.getByRole("button", { name: /registrarme/i }));
+
+  expect(alertMock).toHaveBeenCalledWith("Las contraseñas no coinciden.");
+
+  
 });
