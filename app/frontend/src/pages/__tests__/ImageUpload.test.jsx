@@ -135,3 +135,43 @@ test("probamos el boton Analizar otra planta", async () => {
   expect(screen.queryByText(/Evitar el riego por aspersión y aplicar bactericidas a base de cobre./i)).not.toBeInTheDocument();
 
 });
+
+test("probamos cuando el backend devuelve un error en una prediccion", async () => {
+
+  class MockFileReader {
+    constructor() {
+      this.onloadend = null;
+      this.result = null;
+    }
+    readAsDataURL() {
+      this.result = "data:image/png;base64,MOCK_IMAGE";
+      this.onloadend && this.onloadend();
+    }
+  }
+  global.FileReader = MockFileReader;
+
+  global.fetch = vi.fn(() =>
+    Promise.resolve({
+      json: () =>
+        Promise.resolve({
+          error: "Imagen inválida",
+        }),
+    })
+  );
+
+  render(<ImageUpload />);
+
+  const fileInput = screen.getByLabelText(/Seleccionar imagen/i, {selector: "input",});
+
+  const fakeFile = new File(["dummy"], "planta.png", { type: "image/png" });
+
+  fireEvent.change(fileInput, { target: { files: [fakeFile] } });
+
+  expect(fetch).toHaveBeenCalledTimes(1);
+
+  expect(
+    await screen.findByText(/Imagen inválida/i, {}, { timeout: 3000 })
+  ).toBeInTheDocument();
+
+});
+
