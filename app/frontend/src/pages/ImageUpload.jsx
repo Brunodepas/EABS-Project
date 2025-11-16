@@ -113,6 +113,8 @@ export default function ImageUpload() {
 
               <label className="inline-block">
                 <input
+                  aria-label="Seleccionar imagen"
+                  data-testid="file-input"
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
