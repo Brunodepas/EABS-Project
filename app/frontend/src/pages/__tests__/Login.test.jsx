@@ -92,14 +92,16 @@ test("muestra alerta si email o contrasenia son incorrectos", async () => {
   );
 
   fireEvent.change(screen.getByPlaceholderText("Correo electrónico"), {
-    target: { value: "test@mail.com" },
+    target: { value: "juanceto01@mail.com" },
   });
 
   fireEvent.change(screen.getByPlaceholderText("Contraseña"), {
-    target: { value: "123456" },
+    target: { value: "incorrecta" },
   });
 
-  fireEvent.click(screen.getByRole("button", { name: /entrar/i }));
+  //apretamos entrar
+  const BotonEntrar = screen.getByRole("button", { name: /entrar/i });
+  fireEvent.click(BotonEntrar);
 
   await Promise.resolve();
   await Promise.resolve(); 
@@ -110,4 +112,31 @@ test("muestra alerta si email o contrasenia son incorrectos", async () => {
   );
 });
 
+//TEST LINKS
+
+test("los links de navegación están configurados correctamente", () => {
+  render(
+    <MemoryRouter>
+      <Login />
+    </MemoryRouter>
+  );
+
+  // olvidaste tu contraseña?
+  
+  const forgotLink = screen.getByRole("link", {
+    name: /olvidaste tu contraseña/i,
+  });
+
+  expect(forgotLink).toBeInTheDocument();
+  expect(forgotLink.getAttribute("href")).toBe("/forgot-password");
+
+  // no tienes una cuenta?
+
+  const registerLink = screen.getByRole("link", {
+    name: /no tienes una cuenta/i,
+  });
+
+  expect(registerLink).toBeInTheDocument();
+  expect(registerLink.getAttribute("href")).toBe("/register");
+});
 
