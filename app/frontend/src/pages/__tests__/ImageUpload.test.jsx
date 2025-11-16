@@ -51,6 +51,8 @@ test("cargar una imagen y mostrar los resultados", async () => {
   const fakeFile = new File(["dummy"], "plantita.png", { type: "image/png" });
   fireEvent.change(fileInput, { target: { files: [fakeFile] } });
 
+  expect(fetch).toHaveBeenCalledTimes(1);
+
   expect(await screen.findByRole("heading",{ name: /Tomate/i }) //hay emoji antes
   ).toBeInTheDocument();
 
@@ -61,5 +63,4 @@ test("cargar una imagen y mostrar los resultados", async () => {
   expect(screen.getByText(/90%/i)).toBeInTheDocument();
   expect(screen.getByText(/Evitar el riego por aspersión y aplicar bactericidas a base de cobre./i)).toBeInTheDocument();
 
-  expect(fetch).toHaveBeenCalledTimes(1);
 });
