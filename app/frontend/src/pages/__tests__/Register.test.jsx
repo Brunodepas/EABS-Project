@@ -3,6 +3,8 @@ import { MemoryRouter } from "react-router-dom";
 import Register from "../Register";
 import { vi } from "vitest";
 
+//TEST INICIALIZACION
+
 test("Inicializacion de Register", () => {
   render(
     <MemoryRouter>
@@ -100,7 +102,7 @@ test("muestra alerta cuando las contraseñas no son iguales", async () => {
   expect(alertMock).toHaveBeenCalledWith("Las contraseñas no coinciden.");
 });
 
-// Test MAIL INVALIDO
+// TEST MAIL INVALIDO
 
 test("muestra alerta si el mail no es valido", () => {
   vi.spyOn(window, "alert").mockImplementation(() => {});

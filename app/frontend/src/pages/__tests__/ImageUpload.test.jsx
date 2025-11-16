@@ -2,6 +2,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 import ImageUpload from "../ImageUpload";
 
+//TEST INICIALIZACION
+
 test("la página se inicializa correctamente", () => {
   render(<ImageUpload />);
 
@@ -14,7 +16,7 @@ test("la página se inicializa correctamente", () => {
   ).toBeInTheDocument();
 });
 
-
+//TEST CARGAR IMAGEN Y MOSTRAR RESULTADOS
 
 test("cargar una imagen y mostrar los resultados", async () => {
   // mockeamos fileReader para leer una imagen ficticia
@@ -67,6 +69,8 @@ test("cargar una imagen y mostrar los resultados", async () => {
   expect(screen.getByText(/Evitar el riego por aspersión y aplicar bactericidas a base de cobre./i)).toBeInTheDocument();
 
 });
+
+//TEST BOTON ANALIZAR OTRA PLANTA
 
 test("probamos el boton Analizar otra planta", async () => {
 
@@ -135,6 +139,8 @@ test("probamos el boton Analizar otra planta", async () => {
   expect(screen.queryByText(/Evitar el riego por aspersión y aplicar bactericidas a base de cobre./i)).not.toBeInTheDocument();
 
 });
+
+//TEST ERROR EN PREDICCION
 
 test("probamos cuando el backend devuelve un error en una prediccion", async () => {
 
