@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Leaf, Image, Library, History, User, LogOut } from "lucide-react";
+import { Leaf, Image, History, User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./Aside.css";
 
@@ -36,10 +36,9 @@ export default function Aside() {
     <aside className="fixed left-0 top-0 h-full w-20 bg-white border-r border-gray-200 shadow-md flex flex-col justify-between items-center py-6 z-50">
       <div className="flex flex-col items-center gap-10">
 
-        {/* Logo dinámico basado en la foto de perfil */}
         <div
           className="flex flex-col items-center cursor-pointer group"
-          onClick={() => navigate("/image-upload")}
+          onClick={() => navigate("/home")}
         >
           <div className="bg-green-200 rounded-full p-1 shadow-sm group-hover:scale-110 transition w-14 h-14 flex items-center justify-center overflow-hidden">
 
@@ -84,15 +83,6 @@ export default function Aside() {
           >
             <User className="w-6 h-6" />
           </button>
-
-          {/* Biblioteca */}
-          <button
-            onClick={() => navigate("/library")}
-            className="relative group flex flex-col items-center w-full py-3 rounded-xl hover:scale-110 transition"
-          >
-            <Library className="w-6 h-6" />
-          </button>
-
         </nav>
       </div>
 

@@ -1,11 +1,14 @@
 import React from "react";
 import Aside from "./Aside";
 import { Leaf } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 export default function MainLayout({ children }) {
+  const { pathname } = useLocation();
+  const isHome = pathname === "/home";
+  
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden 
-      bg-gradient-to-br from-[#4C8559] to-[#3C6845]">
+    <div className="min-h-screen h-auto flex flex-col relative overflow-visible bg-gradient-to-br from-[#4C8559] to-[#3C6845]">
 
       {/* === TEXTURA SUAVE (grain) === */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.07] bg-[url('/noise.png')] mix-blend-overlay"></div>
@@ -61,7 +64,13 @@ export default function MainLayout({ children }) {
       </div>
 
       {/* === Contenido === */}
-      <main className="relative z-10 flex-grow flex justify-center items-start px-6 py-16">
+      <main
+        className={
+          isHome
+            ? "relative z-10 flex-grow w-full flex justify-center items-start p-0 m-0"
+            : "relative z-10 flex-grow flex justify-center items-start px-6 py-16"
+        }
+      >
         {children}
       </main>
     </div>
