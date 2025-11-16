@@ -36,6 +36,8 @@ test("Inicializacion de Register", () => {
 
 });
 
+//TEST CAMPOS VACIOS
+
 test("muestra alerta si hay campos vacios", async () => {
 
   const alertMock = vi.spyOn(window, "alert").mockImplementation(() => {});
@@ -55,6 +57,9 @@ test("muestra alerta si hay campos vacios", async () => {
   expect(alertMock).toHaveBeenCalledWith("Por favor, completa todos los campos.");
 
 });
+
+// TEST CONTRASENIAS DISTINTAS
+
 
 test("muestra alerta cuando las contraseñas no son iguales", async () => {
 
@@ -87,8 +92,50 @@ test("muestra alerta cuando las contraseñas no son iguales", async () => {
     target: { value: "abcdef" },
   });
 
-  // apretamos registrarme
-  fireEvent.click(screen.getByRole("button", { name: /registrarme/i }));
+  const BotonRegistrarme = screen.getByRole("button", { name: /registrarme/i });
 
+  // apretamos registrarme
+  fireEvent.click(BotonRegistrarme);
+  
   expect(alertMock).toHaveBeenCalledWith("Las contraseñas no coinciden.");
+});
+
+// Test MAIL INVALIDO
+
+test("muestra alerta si el mail no es valido", () => {
+  vi.spyOn(window, "alert").mockImplementation(() => {});
+
+  render(
+    <MemoryRouter>
+      <Register />
+    </MemoryRouter>
+  );
+
+  fireEvent.change(screen.getByPlaceholderText(/nombre/i), {
+    target: { value: "Juan" },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText(/apellido/i), {
+    target: { value: "Mitre" },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText(/correo/i), {
+    target: { value: "juancetomailcom" }, // email inválido
+  });
+
+  fireEvent.change(screen.getByPlaceholderText("Contraseña"), {
+    target: { value: "123456" },
+  });
+
+  fireEvent.change(screen.getByPlaceholderText("Confirmar contraseña"), {
+    target: { value: "123456" },
+  });
+
+  const BotonRegistrarme = screen.getByRole("button", { name: /registrarme/i });
+
+  // apretamos registrarme
+  fireEvent.click(BotonRegistrarme);
+
+  expect(window.alert).toHaveBeenCalledWith("Ingresá un email válido.");
+
 });
