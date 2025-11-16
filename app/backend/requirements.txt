@@ -8,4 +8,7 @@ pillow
 flask-cors
 SQLAlchemy
 sib_api_v3_sdk
+Werkzeug<3.0
+pytest
+pytest-cov
 # cualquier otra librería de IA que uses
