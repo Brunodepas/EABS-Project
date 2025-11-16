@@ -11,6 +11,7 @@ import HistoryDetail from "./pages/HistoryDetail";
 import Account from "./pages/Account";
 import PrivateRoute from "./routes/PrivateRoute";
 import ResetPassword from "./pages/ResetPassword";
+import Home from "./pages/Home";
 
 function App() {
   return (
@@ -71,6 +72,20 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        {/*Home*/}
+        <Route
+          path="/home"
+          element={
+            <PrivateRoute>
+              <MainLayout>
+                <Home />
+              </MainLayout>
+            </PrivateRoute>
+          }
+        />
+
+
 
 
 
