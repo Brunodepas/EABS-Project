@@ -79,7 +79,7 @@ test("muestra alerta cuando las contraseñas no son iguales", async () => {
     target: { value: "juanceto01@gmail.com" },
   });
 
-  // contrasenias distintas
+  //contrasenias distintas
   fireEvent.change(screen.getByPlaceholderText("Contraseña"), {
     target: { value: "123456" },
   });
@@ -92,6 +92,4 @@ test("muestra alerta cuando las contraseñas no son iguales", async () => {
   fireEvent.click(screen.getByRole("button", { name: /registrarme/i }));
 
   expect(alertMock).toHaveBeenCalledWith("Las contraseñas no coinciden.");
-
-  
 });
