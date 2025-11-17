@@ -49,7 +49,7 @@ export default function EnterCode() {
   return (
     <div className="flex h-screen overflow-hidden">
 
-      {/* FORMULARIO IZQUIERDA */}
+      {/*Formulario*/}
       <div className="w-[40%] bg-[#61754B] flex items-center justify-center">
         
         <form
@@ -64,7 +64,6 @@ export default function EnterCode() {
             Te enviamos un código de 6 dígitos a tu correo. Ingresalo aquí.
           </p>
 
-          {/* EMAIL */}
           <input
             type="email"
             placeholder="Tu correo electrónico"
@@ -73,7 +72,6 @@ export default function EnterCode() {
             className="w-full p-2 mb-4 border rounded bg-white-50"
           />
 
-          {/* CODIGO */}
           <input
             type="text"
             maxLength={6}
@@ -98,7 +96,6 @@ export default function EnterCode() {
         </form>
       </div>
 
-      {/* IMAGEN DERECHA */}
       <div className="relative w-[60%] h-screen">
         <img
           src={loginImage}

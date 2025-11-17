@@ -62,8 +62,6 @@ export default function ImageUpload() {
 
   return (
     <div className="p-6 pl-28">
-
-      {/* ⭐⭐⭐ TUTORIAL – MODERNO Y MINIMALISTA ⭐⭐⭐ */}
       {!showResults && (
         <div className="mb-10 bg-white/70 backdrop-blur-sm border border-green-200 rounded-2xl p-5 shadow-sm animate-fade-in">
           <div className="flex items-center gap-3 mb-3">

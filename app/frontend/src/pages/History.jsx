@@ -69,7 +69,6 @@ export default function History() {
         </div>
       )}
 
-      {/* GRID DE CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-14">
         {filteredHistory.map((item) => (
           <div

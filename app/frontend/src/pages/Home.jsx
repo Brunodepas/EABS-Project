@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="w-full min-h-screen bg-[#f4f5f0] overflow-x-hidden">
       
-      {/* Para compensar el aside */}
+      {/* Para compensar el aside*/}
       <div className="ml-[80px]"> 
 
         <section className="relative w-full min-h-[70vh] flex items-center justify-center text-center overflow-hidden">
@@ -43,8 +43,6 @@ export default function Home() {
               Te ofrecemos precisión, velocidad y un análisis completo en segundos.
             </p>
           </div>
-
-          {/* Cards con imágenes */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl mx-auto px-2">
             <div className="rounded-2xl shadow-lg bg-white overflow-hidden hover:scale-[1.03] transition duration-300">
               <img
