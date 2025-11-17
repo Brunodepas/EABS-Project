@@ -18,3 +18,55 @@ Thumbs.db
 
 # Archivos de logs
 *.log
+
+# Backend
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Databases
+*.sqlite3
+*.db
+
+# Instance folder (Flask)
+instance/
+
+# Logs
+*.log
+
+# Fronted
+node_modules/
+dist/
+build/
+.vite/
+.cache/
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+
+# Coverage / Testing
+coverage/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# SYSTEM / EDITOR FILES
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

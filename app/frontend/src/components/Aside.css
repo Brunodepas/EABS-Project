@@ -1,0 +1,81 @@
+/* --- Styling links --- */
+.aside a {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: "Montserrat", sans-serif;
+  transition: all 0.25s ease;
+  padding: 8px 10px;
+  border-radius: 6px;
+  user-select: none;
+  cursor: pointer;
+  margin: 4px;
+  color: #0a682d;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aside a:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #065f24;
+  transform: translateY(-1px);
+}
+
+.aside a:active {
+  background: rgba(0, 0, 0, 0.1);
+  color: #043d16;
+}
+
+/* --- Shadow --- */
+.aside .paper-shadow-bottom-z-2 {
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.12);
+}
+
+/* --- aside layout --- */
+.aside {
+  background: linear-gradient(to right, #dfffe5, #f1fff5);
+  border: none;
+  height: auto;
+}
+
+.aside .aside-body {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.aside .aside-start,
+.aside .aside-end {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.aside .aside-start .logo {
+  opacity: 0.8;
+  width: 30px;
+}
+
+/* --- Search placeholder structure (por si luego se agrega búsqueda) --- */
+.aside .search {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  height: 42px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+}
+
+/* --- Tabs (si se agregan en el futuro) --- */
+.aside .tabs .aside-body li a:hover {
+  color: #5bc0de;
+}
+
+/* --- Small hover animation for the leaf icon --- */
+.aside .aside-start:hover .text-green-700 {
+  transform: rotate(-8deg);
+  transition: transform 0.3s ease;
+}
+
+
