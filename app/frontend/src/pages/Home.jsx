@@ -95,10 +95,10 @@ export default function Home() {
 
             <p className="text-sm mt-2">
               Realizado por:  
-              <span className="text-white font-semibold"> Bruno De Pasquale</span>, 
+              <span className="text-white font-semibold"> Emiliano Bernal</span>, 
               <span className="text-white font-semibold"> Agustin Cesari</span>, 
-              <span className="text-white font-semibold"> Samuel Quintero</span> y 
-              <span className="text-white font-semibold"> Emiliano Bernal</span>.
+              <span className="text-white font-semibold"> Bruno De Pasquale</span> y
+              <span className="text-white font-semibold"> Samuel Quintero</span>.
             </p>
 
             <div className="mt-4 text-xs text-gray-400">

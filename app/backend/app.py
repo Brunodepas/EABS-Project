@@ -432,7 +432,7 @@ def send_email(to_email, subject, html):
 
     email = sib_api_v3_sdk.SendSmtpEmail(
         to=[{"email": to_email}],
-        sender={"email": "aguscesari14@gmail.com", "name": "EABS Project"},
+        sender={"email": "eabsproject@gmail.com", "name": "EABS Project"},
         subject=subject,
         html_content=html
     )
