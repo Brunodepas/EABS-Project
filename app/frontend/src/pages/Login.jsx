@@ -35,7 +35,20 @@ export default function Login() {
       return;
     }
 
-    navigate("/home"); //Ruta ya protegida
+    
+    const meRes = await fetch("http://localhost:5000/me", {
+      method: "POST",
+      credentials: "include",
+    });
+    const meData = await meRes.json();
+
+    if (meData.profile_image) {
+      localStorage.setItem("profileImage", meData.profile_image);
+    } else {
+      localStorage.removeItem("profileImage");
+    }
+    
+    navigate("/home");//Ruta ya protegida
      }catch(err){
       console.error(err);
       alert("Error conectando al servidor");
