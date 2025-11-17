@@ -99,7 +99,7 @@ export default function History() {
               </p>
 
               <p className="text-green-800 text-sm">
-                <strong>Confianza:</strong> {item.confidence.toFixed(2)}
+                <strong>Confianza:</strong> {(item.confidence * 100).toFixed(2)}%
               </p>
 
               <p className="text-gray-500 text-xs flex items-center gap-2 pt-2">

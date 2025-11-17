@@ -1,14 +1,16 @@
 import React from "react";
 import { Leaf } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
   return (
     <div className="w-full min-h-screen">
         <section className="relative w-full min-h-[70vh] flex items-center justify-center text-center overflow-hidden">
 
         {/* Imagen de fondo */}
         <img
-            src="/src/assets/hero.jpg"
+            src="/assets/home.jpg"
             alt="Decoración"
             className="absolute inset-0 w-full h-full object-cover"
         />
@@ -29,7 +31,7 @@ export default function Home() {
 
             <button
             className="bg-green-600 text-white text-lg px-8 py-3 rounded-xl shadow-md hover:bg-green-700 transition"
-            onClick={() => window.location.href = '/image-upload'}
+            onClick={() => navigate("/image-upload")}
             >
             Analizar una imagen
             </button>
@@ -53,7 +55,7 @@ export default function Home() {
           {/* Card 1 */}
           <div className="rounded-2xl shadow-lg bg-white overflow-hidden hover:scale-[1.03] transition">
             <img
-              src="/src/assets/home1.jpg"
+              src="/assets/home1.jpg"
               alt="Ejemplo análisis"
               className="w-full h-52 object-cover"
             />
@@ -68,7 +70,7 @@ export default function Home() {
           {/* Card 2 */}
           <div className="rounded-2xl shadow-lg bg-white overflow-hidden hover:scale-[1.03] transition">
             <img
-              src="/src/assets/home2.jpg"
+              src="/assets/home2.jpg"
               alt="Diagnóstico"
               className="w-full h-52 object-cover"
             />
