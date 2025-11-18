@@ -14,3 +14,9 @@ services:
       - "3000:80"
     depends_on:
       - backend
+  frontend-tests:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.test
+    working_dir: /app
+    command: ["npm", "test"]
