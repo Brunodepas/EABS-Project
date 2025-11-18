@@ -43,7 +43,7 @@ Lenguajes y herramientas: Python, TensorFlow/Keras, Google Colab, React, Flask, 
 
 - 3 levantar el proyecto: docker compose up app -d
 
-- 4 - [ir a este link](http://127.0.0.1:3000) 
+- 4  [Ir a este link](http://127.0.0.1:3000) 
 
 - 5 bajar el proyecto: docker compose down app
 
