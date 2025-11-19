@@ -56,7 +56,7 @@ Debe crear un archivo .env en la carpeta /app.
 SECRET_KEY=clave-supersecreta-desarrollo
 
 BREVO_API_KEY=una_clave_genial  
-(Registrarse gratis en [Brevo](https://www.github.com/EmiBernal) para obtener tu clave)
+(Registrarse gratis en [Brevo](https://www.brevo.com/es/?gad_source=1&gad_campaignid=22660555129&gclid=CjwKCAiA8vXIBhAtEiwAf3B-g5vqE2GgyV8L-o-S90XJ57IkAl1uHk5DVX3oFYs3kNeOa5Geefw4GBoCazwQAvD_BwE) para obtener tu clave)
 
 FLASK_ENV=development
 
